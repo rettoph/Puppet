@@ -28,7 +28,7 @@ namespace Puppet
 
             _handlers = new Dictionary<String, Action<JToken>>();
 
-            // Load all Connection service instances
+            // Load all connection service instances
             _services = Assembly.GetEntryAssembly()
                 .GetTypes()
                 .Where(t => !t.IsAbstract && typeof(ConnectionService).IsAssignableFrom(t))

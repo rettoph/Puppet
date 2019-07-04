@@ -3,8 +3,8 @@
          class="trackpad"
          @touchstart="handleTouchStart"
          @touchmove="handleTouchMove"
+         @touchend="handleTouchEnd"
     >
-        {{counter}}
     </div>
 </template>
 
@@ -15,7 +15,6 @@
         data() {
             return {
                 touch: null,
-                counter: 0,
                 position: {
                     x: 0,
                     y: 0
@@ -27,19 +26,37 @@
         },
         methods: {
             handleTouchStart(e) {
-                counter++;
-
                 if (this.touch == null) {
                     console.log('Trackpad Component - Touch Start');
 
-                    this.touch = e.targetTouches.item(0).identifier;
+                    this.touch = e.changedTouches.item(0).identifier;
+
+                    var curTouch = e.changedTouches.item(0);
+
+                    this.position.x = curTouch.clientX;
+                    this.position.y = curTouch.clientY;
                 }
             },
             handleTouchMove(e) {
-                if (e.touches.item(0).identifier == this.touch) { 
+                if (e.changedTouches.item(0).identifier == this.touch) { 
                     console.log('Trackpad Component - Touch Move');
 
-                    counter++;
+                    var curTouch = e.touches.item(0);
+
+                    client.send('mouse:move', {
+                        x: (curTouch.clientX - this.position.x) * 2.5,
+                        y: (curTouch.clientY - this.position.y) * 2.5
+                    });
+
+                    this.position.x = curTouch.clientX;
+                    this.position.y = curTouch.clientY;
+                }
+            },
+            handleTouchEnd(e) {
+                if (e.changedTouches.item(0).identifier == this.touch) {
+                    console.log('Trackpad Component - Touch End');
+
+                    this.touch = null;
                 }
             }
         }
