@@ -10,8 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "css-loader": "^3.0.0",
+    "screenfull": "^4.2.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.0",
+    "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.33.0"
   },
