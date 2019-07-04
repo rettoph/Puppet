@@ -66,9 +66,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="public\app.js" />
     <EmbeddedResource Include="public\index.html" />
     <EmbeddedResource Include="public\app.css" />
+    <EmbeddedResource Include="public\app.js" />
     <Content Include="src\js\app.js" />
     <EmbeddedResource Include="src\js\utilities\SocketClient.js" />
     <Content Include="src\js\components\FullScreenComponent.vue.html" />

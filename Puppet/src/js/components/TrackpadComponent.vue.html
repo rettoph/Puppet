@@ -1,9 +1,10 @@
 ﻿<template>
     <div
          class="trackpad"
+         @touchstart="handleTouchStart"
          @touchmove="handleTouchMove"
     >
-
+        {{counter}}
     </div>
 </template>
 
@@ -11,12 +12,35 @@
     const client = require('../utilities/SocketClient.js');
 
     export default {
+        data() {
+            return {
+                touch: null,
+                counter: 0,
+                position: {
+                    x: 0,
+                    y: 0
+                }
+            }
+        },
         mounted() {
             console.log('Trackpad Component Mounted!');
         },
         methods: {
+            handleTouchStart(e) {
+                counter++;
+
+                if (this.touch == null) {
+                    console.log('Trackpad Component - Touch Start');
+
+                    this.touch = e.targetTouches.item(0).identifier;
+                }
+            },
             handleTouchMove(e) {
-                console.log("test");
+                if (e.touches.item(0).identifier == this.touch) { 
+                    console.log('Trackpad Component - Touch Move');
+
+                    counter++;
+                }
             }
         }
     }
