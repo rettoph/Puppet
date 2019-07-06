@@ -54,11 +54,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ConnectionService.cs" />
-    <Compile Include="Services\MouseConnectionService.cs" />
-    <Compile Include="Utilities\Message.cs" />
-    <Compile Include="Utilities\Point.cs" />
-    <Compile Include="WebSocketConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -76,7 +71,12 @@
     <Content Include="src\js\pages\home.vue.html" />
     <Content Include="webpack.config.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Puppet.Library\Puppet.Library.csproj">
+      <Project>{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}</Project>
+      <Name>Puppet.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>npx webpack</PreBuildEvent>
