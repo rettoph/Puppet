@@ -1,0 +1,96 @@
+﻿<template>
+    <div
+        ref="touch"
+        class="touch"
+        @touchstart="handleTouchStart"
+        @touchmove="handleTouchMove"
+        @touchend="handleTouchEnd"
+    >
+        <slot></slot>
+    </div>
+</template>
+
+<script>
+    export default {
+        props: {
+            handler: {
+                required: true,
+                type: Function
+            }
+        },
+        data() {
+            return {
+                touch: null,
+                down: false
+            }
+        },
+        mounted() {
+            console.log("Touch Component mounted.");
+        },
+        methods: {
+            handleTouchStart(e) {
+                if (!this.down) {
+                    // Set the initial touch value...
+                    this.touch = e.changedTouches.item(0);
+
+                    console.log('Touch Component - Start', this.touch.identifier);
+
+                    this.updateTouch(e, true);
+                }
+            },
+            handleTouchMove(e) {
+                if (this.getNewTouch(e.changedTouches) != null) {
+                    console.log('Touch Component - Move', this.touch.identifier);
+
+                    this.updateTouch(e, true);
+                }
+            },
+            handleTouchEnd(e) {
+                if (this.getNewTouch(e.changedTouches) != null) {
+                    console.log('Touch Component - End', this.touch.identifier);
+
+                    this.updateTouch(e, false);
+                }
+            },
+            updateTouch(e, down) {
+                var touch = this.getNewTouch(e.changedTouches);
+                var data = this.getTouchData(touch, down);
+                this.handler(data);
+
+                // Update the stored touch value...
+                this.touch = touch;
+                this.down = down;
+            },
+            getTouchData(touch, down) {
+                var width = this.$refs.touch.clientWidth;
+                var height = this.$refs.touch.clientHeight;
+                var left = this.$refs.touch.offsetLeft;
+                var top = this.$refs.touch.offsetTop;
+
+                return {
+                    touching: down,
+                    px: {
+                        x: (touch.clientX - left),
+                        y: (touch.clientY - top),
+                        dx: touch.clientX - this.touch.clientX,
+                        dy: touch.clientY - this.touch.clientY
+                    },
+                    r: {
+                        x: (touch.clientX - left) / width,
+                        y: (touch.clientY - top) / height,
+                        dx: (touch.clientX - this.touch.clientX) / width,
+                        dy: (touch.clientY - this.touch.clientY) / height
+                    },
+                }
+            },
+            getNewTouch(touches) {
+                for (var i = 0; i < touches.length; i++) {
+                    if (touches.item(i).identifier == this.touch.identifier)
+                        return touches.item(i);
+                }
+
+                return null;
+            }
+        }
+    }
+</script>

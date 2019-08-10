@@ -11,9 +11,9 @@ Vue.use(VueRouter);
  * Setup application components
  */
 Vue.component('fullscreen', require('./components/FullScreenComponent.vue.html').default);
+Vue.component('touch', require('./components/TouchComponent.vue.html').default);
 Vue.component('trackpad', require('./components/TrackpadComponent.vue.html').default);
-Vue.component('arrowkeys', require('./components/ArrowKeysComponent.vue.html').default);
-Vue.component('key', require('./components/KeyComponent.vue.html').default);
+Vue.component('joystick', require('./components/JoystickComponent.vue.html').default);
 
 /*
  * Setup application routes

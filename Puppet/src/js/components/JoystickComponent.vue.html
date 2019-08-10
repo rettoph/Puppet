@@ -1,12 +1,12 @@
 ﻿<template>
     <div 
-        class="trackpad"
-        ref="trackpad"
+         class="joystick"
+         ref="joystick"
     >
         <touch
             :handler="touchHandler"
         >
-            <canvas
+            <canvas 
                 ref="canvas"
                 :width="width"
                 :height="height"
@@ -37,14 +37,14 @@
 
             window.addEventListener('resize', this.resize);
 
-            console.log("Trackpad Component mounted.");
+            console.log("Joystick Component mounted.");
         },
         methods: {
             resize() {
-                console.log("Trackpad Component - Resizing.");
+                console.log("Joystick Component - Resizing.");
 
-                this.width = this.$refs.trackpad.clientWidth;
-                this.height = this.$refs.trackpad.clientHeight;
+                this.width = this.$refs.joystick.clientWidth;
+                this.height = this.$refs.joystick.clientHeight;
             },
             touchHandler(data) {
                 this.data = data;

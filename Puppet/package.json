@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "css-loader": "^3.0.0",
+    "lerp": "^1.0.3",
     "screenfull": "^4.2.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.0",
