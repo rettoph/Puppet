@@ -1,7 +1,9 @@
 ﻿using Fleck;
+using Newtonsoft.Json;
 using Puppet.Library;
 using Puppet.Library.Enums;
 using Puppet.Library.Factories;
+using Puppet.Library.Structs;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,24 +22,11 @@ namespace Puppet
     {
         static void Main(string[] args)
         {
-            User32.SendInput(InputFactory.CreateMouseInput(
-                100,
-                0,
-                MouseInputDwFlag.MOUSEEVENTF_MOVE));
-
-            Int32 i = 10;
-
-            while (i> 0)
-            {
-                Console.WriteLine(i);
-                i--;
-
-                Thread.Sleep(500);
-            }
-
-            Console.WriteLine(User32.SendInput(InputFactory.CreateKeyboardInput(KeyCode.VK_W, KeyBoardInputDwFlag.KEYEVENTF_KEYDOWN)));
+            var http = new HttpServer();
+            var tcp = new SocketServer();
 
             Console.ReadLine();
+            // InputFactory.CreateMouseInput(0, 0, MouseInputDwFlag.le);
         }
     }
 }

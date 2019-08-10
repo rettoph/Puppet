@@ -19,7 +19,61 @@ body {
 }
 
 .trackpad {
+    float: right;
     height: 100vh;
     width: 50vw;
     background: rgba(0, 0, 0, 0.1);
+}
+
+.trackpad .button {
+    width: 100px;
+    float: right;
+    height: 100vh;
+    background: blue;
+    margin-left: calc(50vw - 100px);
+    margin-bottom: 10px;
+}
+
+.arrowkeys {
+    float: left;
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    margin-top: calc(50vh - 150px);
+}
+
+.arrowkeys .v {
+    width: 75px;
+    height: 300px;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+}
+
+.arrowkeys .h {
+    width: 300px;
+    height: 75px;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    left: 0;
+}
+
+.up {
+    top: 0;
+    border-radius: 37.5px 37.5px 0 0;
+}
+
+.right {
+    right: 0;
+    border-radius: 0 37.5px 37.5px 0;
+}
+
+.down {
+    bottom: 0;
+    border-radius: 0 0 37.5px 37.5px;
+}
+
+.left {
+    left: 0;
+    border-radius: 37.5px 0 0 37.5px;
 }

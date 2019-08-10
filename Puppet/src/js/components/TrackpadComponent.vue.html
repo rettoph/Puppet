@@ -1,10 +1,14 @@
 ﻿<template>
-    <div
-         class="trackpad"
+    <div class="trackpad"
          @touchstart="handleTouchStart"
          @touchmove="handleTouchMove"
          @touchend="handleTouchEnd"
+         @click="handleLeftClick"
     >
+        <div 
+             class="button"
+             @click="handleRightClick"
+        ></div>
     </div>
 </template>
 
@@ -18,7 +22,9 @@
                 position: {
                     x: 0,
                     y: 0
-                }
+                },
+                moveRate: 30,
+                lastMove: Date.now()
             }
         },
         mounted() {
@@ -39,17 +45,31 @@
             },
             handleTouchMove(e) {
                 if (e.changedTouches.item(0).identifier == this.touch) { 
-                    console.log('Trackpad Component - Touch Move');
+                    // Ensure that a move command can only be triggered once per moveRate
+                    if (Date.now() - this.lastMove > this.moveRate) {
+                        console.log('Trackpad Component - Touch Move');
+                        var curTouch = e.touches.item(0);
+                        client.send({
+                            type: 0,
+                            u: {
+                                mi: {
+                                    dx: Math.round((curTouch.clientX - this.position.x) * 2.5),
+                                    dy: Math.round((curTouch.clientY - this.position.y) * 2.5),
+                                    mouseData: 0,
+                                    dwFlags: 1,
+                                    time: 0,
+                                    dwExtraInfo: {
+                                        value: 0
+                                    }
+                                }
+                            }
+                        });
 
-                    var curTouch = e.touches.item(0);
+                        this.position.x = curTouch.clientX;
+                        this.position.y = curTouch.clientY;
+                        this.lastMove = Date.now();
+                    }
 
-                    client.send('mouse:move', {
-                        x: (curTouch.clientX - this.position.x) * 2.5,
-                        y: (curTouch.clientY - this.position.y) * 2.5
-                    });
-
-                    this.position.x = curTouch.clientX;
-                    this.position.y = curTouch.clientY;
                 }
             },
             handleTouchEnd(e) {
@@ -58,6 +78,72 @@
 
                     this.touch = null;
                 }
+            },
+            handleLeftClick(e) {
+                client.send({
+                    type: 0,
+                    u: {
+                        mi: {
+                            dx: 0,
+                            dy: 0,
+                            mouseData: 0,
+                            dwFlags: 2,
+                            time: 0,
+                            dwExtraInfo: {
+                                value: 0
+                            }
+                        }
+                    }
+                });
+
+                client.send({
+                    type: 0,
+                    u: {
+                        mi: {
+                            dx: 0,
+                            dy: 0,
+                            mouseData: 0,
+                            dwFlags: 4,
+                            time: 0,
+                            dwExtraInfo: {
+                                value: 0
+                            }
+                        }
+                    }
+                });
+            },
+            handleRightClick(e) {
+                client.send({
+                    type: 0,
+                    u: {
+                        mi: {
+                            dx: 0,
+                            dy: 0,
+                            mouseData: 0,
+                            dwFlags: 8,
+                            time: 0,
+                            dwExtraInfo: {
+                                value: 0
+                            }
+                        }
+                    }
+                });
+
+                client.send({
+                    type: 0,
+                    u: {
+                        mi: {
+                            dx: 0,
+                            dy: 0,
+                            mouseData: 0,
+                            dwFlags: 10,
+                            time: 0,
+                            dwExtraInfo: {
+                                value: 0
+                            }
+                        }
+                    }
+                });
             }
         }
     }

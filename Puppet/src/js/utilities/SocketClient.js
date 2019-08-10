@@ -12,11 +12,8 @@
         this.handlers[type] = handler;
     }
 
-    send(type, data) {
-        this.socket.send(JSON.stringify({
-            type: type,
-            data: data
-        }));
+    send(data) {
+        this.socket.send(JSON.stringify(data));
     }
 
     handleRawMessage(e) {

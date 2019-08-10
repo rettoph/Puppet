@@ -12,6 +12,8 @@ Vue.use(VueRouter);
  */
 Vue.component('fullscreen', require('./components/FullScreenComponent.vue.html').default);
 Vue.component('trackpad', require('./components/TrackpadComponent.vue.html').default);
+Vue.component('arrowkeys', require('./components/ArrowKeysComponent.vue.html').default);
+Vue.component('key', require('./components/KeyComponent.vue.html').default);
 
 /*
  * Setup application routes
