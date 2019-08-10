@@ -27,7 +27,9 @@
                 loop: null,
                 alpha: 1,
                 width: 0,
-                height: 0
+                height: 0,
+                scroll: false,
+                touching: false
             }
         },
         mounted() {
@@ -48,26 +50,57 @@
             },
             touchHandler(data) {
                 this.data = data;
+
+                this.scroll = this.data.px.x > this.width - 49.5;
             },
             draw() {
-                if (this.data != null) {
-                    this.ctx.clearRect(0, 0, this.width, this.height);
+                // Clear the canvas
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                // Update the internal alpha value
+                this.updateAlpha();
 
-                    if (this.data.touching) {
-                        this.alpha = 1;
+                // If there is a touch event currently... darken the side being touched
+                if (this.side != null) {
+                    this.ctx.globalAlpha = this.alpha;
+                    this.ctx.fillStyle = '#57606f';
+                    if (this.scroll) {
+                        this.ctx.fillRect(this.width - 49.5, 0, 49.5, this.height);
                     }
                     else {
-                        this.alpha = lerp(this.alpha, 0, 0.1);
+                        this.ctx.fillRect(0, 0, this.width - 49.5, this.height);
                     }
+                }
 
+                // Draw the left/right divider
+                this.ctx.beginPath();
+                this.ctx.globalAlpha = 1;
+                this.ctx.strokeStyle = '#57606f';
+                this.ctx.moveTo(this.width - 49.5, 0);
+                this.ctx.lineTo(this.width - 49.5, this.height);
+                this.ctx.stroke();
+
+                this.drawCursor();
+
+
+            },
+            drawCursor() {
+                // Draw the cursor icon, if there is a touch event going on...
+                if (this.data != null) {
                     // Draw an icon where the user it touching
-                    this.ctx.beginPath();
-                    this.ctx.fillStyle = '#70a1ff';
+                    this.ctx.fillStyle = (this.scroll ? '#7bed9f' : '#70a1ff');
                     this.ctx.globalAlpha = this.alpha;
+                    this.ctx.beginPath();
                     this.ctx.arc(this.data.px.x, this.data.px.y, 25, 0, 2 * Math.PI);
                     this.ctx.fill();
                 }
-
+            },
+            updateAlpha() {
+                if (this.data != null && this.data.touching) {
+                    this.alpha = lerp(1, this.alpha, 0.15);
+                }
+                else {
+                    this.alpha = lerp(this.alpha, 0, 0.1);
+                }
             }
         }
     }
