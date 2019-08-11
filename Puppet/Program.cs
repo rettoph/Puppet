@@ -25,7 +25,6 @@ namespace Puppet
             try
             {
                 var tcp = new SocketServer();
-                Console.Clear();
                 var http = new HttpServer();
             }
             catch(Exception e)
