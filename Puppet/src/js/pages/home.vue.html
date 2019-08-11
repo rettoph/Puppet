@@ -1,14 +1,27 @@
 ﻿<template>
     <div>
-        <joystick></joystick>
+        <key-joystick :keys="keys"></key-joystick>
         <trackpad></trackpad>
     </div>
 </template>
 
 <script>
+    const KeyCode = require('../utilities/KeyCode.js');
+
     export default {
+        data() {
+            return {
+                keys: [
+                    KeyCode.VK_RIGHT,
+                    KeyCode.VK_DOWN,
+                    KeyCode.VK_LEFT,
+                    KeyCode.VK_UP
+                ]
+            }
+        },
         mounted() {
             console.log('Home Page Mounted!');
+            
         }
     }
 </script>

@@ -28,12 +28,12 @@ body {
     float: right;
     height: 100vh;
     width: 50vw;
-    background: #f1f2f6;
+    background: #ffffff;
 }
 
 .joystick {
     float: left;
     height: 100vh;
     width: 50vw;
-    background: #dfe4ea;
+    background: #ffffff;
 }

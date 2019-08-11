@@ -56,8 +56,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SocketServer.cs" />
+    <Content Include="src\js\components\KeyJoystickComponent.vue.html" />
     <Content Include="src\js\components\TouchComponent.vue.html" />
     <Content Include="src\js\components\JoystickComponent.vue.html" />
+    <Content Include="src\js\utilities\KeyJoystickSlice.js" />
     <Compile Include="WebSocketConnection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +76,13 @@
     <Content Include="src\js\components\FullScreenComponent.vue.html" />
     <Content Include="src\js\components\TrackpadComponent.vue.html" />
     <Content Include="src\js\pages\home.vue.html" />
+    <Content Include="src\js\utilities\InputFactory.js" />
+    <Content Include="src\js\utilities\InputType.js" />
+    <Content Include="src\js\utilities\JoystickSlice.js" />
+    <Content Include="src\js\utilities\KeyBoardInputDwFlag.js" />
+    <Content Include="src\js\utilities\KeyCode.js" />
+    <Content Include="src\js\utilities\MouseData.js" />
+    <Content Include="src\js\utilities\MouseInputDwFlag.js" />
     <Content Include="webpack.config.js" />
   </ItemGroup>
   <ItemGroup>

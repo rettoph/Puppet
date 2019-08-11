@@ -1,0 +1,26 @@
+﻿<template>
+    <joystick :slices="slices"></joystick>
+</template>
+
+<script>
+    const JoystickSlice = require('../utilities/KeyJoystickSlice.js');
+
+    export default {
+        props: {
+            keys: {
+                required: true,
+                type: Array
+            }
+        },
+        data() {
+            return {
+                slices: this.keys.map(k => {
+                    return new JoystickSlice(k)
+                })
+            }
+        },
+        mounted() {
+            console.log('Key Joystick Component mounted.');
+        }
+    }
+</script>

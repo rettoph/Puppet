@@ -17,25 +17,37 @@
 
 <script>
     const lerp = require('lerp')
-    const client = require('../utilities/SocketClient.js');
+    const InputFactory = require('../utilities/InputFactory.js');
+    const MouseInputDwFlag = require('../utilities/MouseInputDwFlag.js');
 
     export default {
         data() {
             return {
-                ctx: null,
-                data: null,
                 loop: null,
-                alpha: 1,
+                ctx: null,
                 width: 0,
                 height: 0,
-                scroll: false,
-                touching: false
+                data: null,
+                touched: false,
+                touchedAt: Date.now(),
+                touchedAlpha: 0,
+                moved: false,
+                pressed: false,
+                pressedDelay: 500,
+                pressedAlpha: 0,
+                left: false,
+                scrollWidth: 50,
+                clicks: [],
+                clickSteps: 50,
+                moveMultiplier: 5,
+                scrollMultiplier: 15,
+                dirty: false
             }
         },
         mounted() {
             this.ctx = this.$refs.canvas.getContext('2d');
-            this.loop = setInterval(this.draw, 16);
             this.resize();
+            this.loop = setInterval(this.frame, 16);
 
             window.addEventListener('resize', this.resize);
 
@@ -49,57 +61,227 @@
                 this.height = this.$refs.trackpad.clientHeight;
             },
             touchHandler(data) {
-                this.data = data;
+                if (!this.touched && data.touching) {
+                    // Touched event...
+                    this.touched = true;
+                    this.touchedAt = Date.now();
+                    this.moved = false;
+                    this.pressed = false;
 
-                this.scroll = this.data.px.x > this.width - 49.5;
-            },
-            draw() {
-                // Clear the canvas
-                this.ctx.clearRect(0, 0, this.width, this.height);
-                // Update the internal alpha value
-                this.updateAlpha();
+                    this.left = data.px.x < this.width - this.scrollWidth;
+                    console.log('Touched Event!');
+                }
+                else if (this.touched && !this.moved && !this.pressed && !data.touching) {
+                    // Clicked event...
+                    this.touched = false;
+                    this.handleClick();
+                    
+                    console.log('Clicked Event!');
+                }
+                else if (this.pressed && !data.touching) {
+                    // Released event...
+                    this.touched = false;
+                    this.pressed = false;
 
-                // If there is a touch event currently... darken the side being touched
-                if (this.side != null) {
-                    this.ctx.globalAlpha = this.alpha;
-                    this.ctx.fillStyle = '#57606f';
-                    if (this.scroll) {
-                        this.ctx.fillRect(this.width - 49.5, 0, 49.5, this.height);
+                    // Send the released data...
+                    if (this.left) {
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_LEFTUP);
                     }
                     else {
-                        this.ctx.fillRect(0, 0, this.width - 49.5, this.height);
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_RIGHTUP);
+                    }
+
+                    console.log('Released Event!');
+                }
+                else if (this.touched && this.moved && !data.touching) {
+                    // Moved ended event...
+                    this.touched = false;
+                    this.moved = false;
+
+                    console.log('Moved Ended Event!');
+                }
+                else {
+                    // Moved event...
+                    this.moved = true;
+                    console.log('Moved Event!');
+                }
+
+                // Dave the data for next frame
+                this.data = data;
+                this.dirty = true;
+            },
+            handleClick() {
+                // Create and save a new click event
+                var click = {
+                    x: this.data.px.x,
+                    y: this.data.px.y,
+                    left: this.left,
+                    step: 0
+                };
+
+                if (click.left) {
+                    InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_LEFTDOWN);
+                    setTimeout(() => {
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_LEFTUP)
+                    }, 100);
+                }
+                else {
+                    InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_RIGHTDOWN);
+                    setTimeout(() => {
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_RIGHTUP)
+                    }, 100);
+                }
+
+                window.navigator.vibrate(25);
+
+                this.clicks.push(click);
+            },
+            frame() {
+                this.update();
+                this.draw();
+            },
+            update() {
+                if (!this.pressed && this.touched && !this.moved && Date.now() - this.touchedAt > this.pressedDelay) {
+                    // Pressed event...
+                    this.pressed = true;
+
+                    // Send the pressed data...
+                    if (this.left) {
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_LEFTDOWN);
+                    }
+                    else {
+                        InputFactory.SendMouseInput(0, 0, MouseInputDwFlag.MOUSEEVENTF_RIGHTDOWN);
+                    }
+
+                    window.navigator.vibrate(50);
+
+                    console.log('Pressed Event!');
+                }
+
+                if (this.moved && this.dirty) {
+                    // Send the moved data...
+                    if (!this.pressed && !this.left) {
+                        if (Math.abs(this.data.px.dy) > 2) {
+                            // Send scroll data...
+                            InputFactory.SendMouseInput(
+                                0,
+                                0,
+                                MouseInputDwFlag.MOUSEEVENTF_WHEEL,
+                                (-0.05 * Math.pow(this.data.px.dy, 3)) * this.scrollMultiplier);
+
+                            window.navigator.vibrate(5);
+                        }
+                    }
+                    else {
+                        // Send move mouse data...
+                        InputFactory.SendMouseInput(
+                            this.data.px.dx * this.moveMultiplier,
+                            this.data.px.dy * this.moveMultiplier,
+                            MouseInputDwFlag.MOUSEEVENTF_MOVE);
                     }
                 }
 
-                // Draw the left/right divider
-                this.ctx.beginPath();
+                // Update the internal alpha values
+                this.touchedAlpha = lerp(this.touchedAlpha, this.touched ? 1 : 0, 0.1);
+                this.pressedAlpha = lerp(this.pressedAlpha, this.pressed ? 1 : 0, 0.1);
+
+                this.dirty = false;
+            },
+            draw() {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+
+                this.drawTouched();
+                this.drawPressed();
+
+                // Draw a line seperating the left from right
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeStyle = '#747d8c';
                 this.ctx.globalAlpha = 1;
-                this.ctx.strokeStyle = '#57606f';
-                this.ctx.moveTo(this.width - 49.5, 0);
-                this.ctx.lineTo(this.width - 49.5, this.height);
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.width - this.scrollWidth, 0);
+                this.ctx.lineTo(this.width - this.scrollWidth, this.height);
                 this.ctx.stroke();
 
                 this.drawCursor();
+                this.drawClicks();
+            },
+            drawTouched() {
+                // Draw a slight offcolor if the trackpad is being pressed
+                if (this.touched) {
+                    this.ctx.fillStyle = '#dfe4ea';
+                    this.ctx.globalAlpha = this.touchedAlpha;
 
+                    if (this.left) {
+                        this.ctx.fillRect(0, 0, this.width - this.scrollWidth, this.height);
+                    }
+                    else {
+                        this.ctx.fillRect(this.width - this.scrollWidth, 0, this.scrollWidth, this.height);
+                    }
+                }
+            },
+            drawPressed() {
+                // Draw a slight offcolor if the trackpad is being pressed
+                if (this.pressed) {
+                    this.ctx.fillStyle = '#ced6e0';
+                    this.ctx.globalAlpha = this.pressedAlpha;
 
+                    if (this.left) {
+                        this.ctx.fillRect(0, 0, this.width - this.scrollWidth, this.height);
+                    }
+                    else {
+                        this.ctx.fillRect(this.width - this.scrollWidth, 0, this.scrollWidth, this.height);
+                    }
+                }
             },
             drawCursor() {
-                // Draw the cursor icon, if there is a touch event going on...
-                if (this.data != null) {
-                    // Draw an icon where the user it touching
-                    this.ctx.fillStyle = (this.scroll ? '#7bed9f' : '#70a1ff');
-                    this.ctx.globalAlpha = this.alpha;
+                if (this.touched) {
+                    var color = this.left ? '#70a1ff' : '#ff6b81';
+                    this.ctx.fillStyle = color;
+                    this.ctx.globalAlpha = this.touchedAlpha;
+
                     this.ctx.beginPath();
-                    this.ctx.arc(this.data.px.x, this.data.px.y, 25, 0, 2 * Math.PI);
-                    this.ctx.fill();
+                    this.ctx.arc(this.data.px.x, this.data.px.y, 50, 0, 2 * Math.PI, false);
+
+                    if (this.pressed) {
+                        
+                        this.ctx.fill();
+                    }
+                    else {
+                        this.ctx.lineWidth = 5;
+                        this.ctx.strokeStyle = color;
+                        this.ctx.stroke();
+
+                        if (!this.moved) {
+                            // Draw a growing circle...
+                            var ratio = (Date.now() - this.touchedAt) / this.pressedDelay;
+
+                            this.ctx.beginPath();
+                            this.ctx.arc(this.data.px.x, this.data.px.y, 50 * ratio, 0, 2 * Math.PI, false);
+                            this.ctx.fill();
+                        }
+                    }
+
                 }
             },
-            updateAlpha() {
-                if (this.data != null && this.data.touching) {
-                    this.alpha = lerp(1, this.alpha, 0.15);
-                }
-                else {
-                    this.alpha = lerp(this.alpha, 0, 0.1);
+            drawClicks() {
+                for (var i = 0; i < this.clicks.length; i++) {
+                    if (this.clicks[i].step < this.clickSteps) {
+                        // Draw the click..
+                        this.ctx.strokeStyle = this.clicks[i].left ? '#70a1ff' : '#ff6b81';
+                        this.ctx.globalAlpha = lerp(1, 0, this.clicks[i].step / this.clickSteps);
+                        this.ctx.lineWidth = 3;
+
+                        this.ctx.beginPath();
+                        this.ctx.arc(this.clicks[i].x, this.clicks[i].y, this.clicks[i].step, 0, 2 * Math.PI, false);
+                        this.ctx.stroke();
+
+                        // Increase the click step
+                        this.clicks[i].step+=1.5;
+                    }
+                    else {
+                        // Remove the click...
+                        this.clicks.splice(i, 1);
+                    }
                 }
             }
         }

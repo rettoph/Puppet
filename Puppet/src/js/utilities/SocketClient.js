@@ -2,18 +2,19 @@
 {
     constructor() {
         console.log('Creating new MessageHandler instance...');
-        // this.socket = new WebSocket("ws://" + window.location.hostname + ":8081");
-        // this.handlers = {};
-        // 
-        // this.socket.addEventListener('message', this.handleRawMessage.bind(this));
+        this.socket = new WebSocket("ws://" + window.location.hostname + ":8081");
+        this.handlers = {};
+        
+        this.socket.addEventListener('message', this.handleRawMessage.bind(this));
     }
 
     bind(type, handler) {
-        // this.handlers[type] = handler;
+        this.handlers[type] = handler;
     }
 
     send(data) {
-        // this.socket.send(JSON.stringify(data));
+        console.log('Sending Data', data);
+        this.socket.send(JSON.stringify(data));
     }
 
     handleRawMessage(e) {

@@ -16,24 +16,48 @@
 </template>
 
 <script>
-    const lerp = require('lerp')
+    const lerp = require('lerp');
     const client = require('../utilities/SocketClient.js');
 
     export default {
+        props: {
+            slices: {
+                required: true,
+                type: Array
+            }
+        },
         data() {
             return {
                 ctx: null,
                 data: null,
                 loop: null,
-                alpha: 1,
                 width: 0,
-                height: 0
+                height: 0,
+                overlap: true,
+                radius: 150,
+                buffer: 50,
+                x: 0,
+                y: 0,
+                touched: false,
+                theta: 0,
+                distance: 0,
+                alpha: 0,
+                strict: false
             }
         },
         mounted() {
             this.ctx = this.$refs.canvas.getContext('2d');
-            this.loop = setInterval(this.draw, 16);
+            this.loop = setInterval(this.frame, 16);
             this.resize();
+
+            // Initialize all recieved slices
+            var radians = (Math.PI * 2) / (this.overlap ? this.slices.length - 1 : this.slices.length);
+            var thetaStep = (Math.PI * 2) / this.slices.length;
+            var theta = 0;
+            for (var i = 0; i < this.slices.length; i++) {
+                this.slices[i].initialize(this, radians, theta);
+                theta += thetaStep;
+            }
 
             window.addEventListener('resize', this.resize);
 
@@ -45,29 +69,62 @@
 
                 this.width = this.$refs.joystick.clientWidth;
                 this.height = this.$refs.joystick.clientHeight;
+
+                this.x = this.width / 2;
+                this.y = this.height / 2;
             },
             touchHandler(data) {
                 this.data = data;
-            },
-            draw() {
-                if (this.data != null) {
-                    this.ctx.clearRect(0, 0, this.width, this.height);
 
-                    if (this.data.touching) {
-                        this.alpha = 1;
-                    }
-                    else {
-                        this.alpha = lerp(this.alpha, 0, 0.1);
-                    }
+                this.theta = Math.atan2(this.data.px.y - this.y, this.data.px.x - this.x);
+                this.distance = Math.sqrt(Math.pow(this.data.px.x - this.x, 2) + Math.pow(this.data.px.y - this.y, 2));
 
-                    // Draw an icon where the user it touching
-                    this.ctx.beginPath();
-                    this.ctx.fillStyle = '#70a1ff';
-                    this.ctx.globalAlpha = this.alpha;
-                    this.ctx.arc(this.data.px.x, this.data.px.y, 25, 0, 2 * Math.PI);
-                    this.ctx.fill();
+                if (!data.touching) {
+                    this.touched = false;
+                }
+                else if (!this.strict || this.distance < this.buffer) {
+                    this.touched = true;
                 }
 
+                // Update the components...
+                this.update();
+            },
+            frame() {
+                this.update();
+                this.draw();
+            },
+            update() {
+                for (var i = 0; i < this.slices.length; i++)
+                    this.slices[i].update();
+
+                this.alpha = lerp(this.alpha, this.touched ? 1 : 0, 0.1);
+            },
+            draw() {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+
+                this.ctx.globalAlpha = 1;
+                this.ctx.fillStyle = '#dfe4ea';
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.beginPath();
+                this.ctx.arc(this.x, this.y, this.buffer, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                for (var i = 0; i < this.slices.length; i++)
+                    this.slices[i].drawBackground();
+
+                for (var i = 0; i < this.slices.length; i++)
+                    this.slices[i].drawForeground();
+
+                if (this.data != null) {
+                    this.ctx.globalAlpha = this.alpha;
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.data.px.x, this.data.px.y, 50, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
             }
         }
     }
