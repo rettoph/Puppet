@@ -22,8 +22,18 @@ namespace Puppet
     {
         static void Main(string[] args)
         {
-            var http = new HttpServer();
-            var tcp = new SocketServer();
+            try
+            {
+                var tcp = new SocketServer();
+                Console.Clear();
+                var http = new HttpServer();
+            }
+            catch(Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{e.GetType().Name} => {e.Message}");
+            }
+
 
             Console.ReadLine();
             // InputFactory.CreateMouseInput(0, 0, MouseInputDwFlag.le);
