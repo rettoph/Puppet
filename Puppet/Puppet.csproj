@@ -9,12 +9,13 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Puppet</RootNamespace>
     <AssemblyName>Puppet</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -91,7 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Puppet.Library\Puppet.Library.csproj">
-      <Project>{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}</Project>
+      <Project>{bc0158aa-4178-4ebb-ba49-23a64b78547b}</Project>
       <Name>Puppet.Library</Name>
     </ProjectReference>
   </ItemGroup>
@@ -101,7 +102,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)..\ILMerge-$(ConfigurationName)
-$(ILMergeConsolePath) $(TargetDir)Puppet.exe /out:$(TargetDir)..\ILMerge-$(ConfigurationName)\Puppet.exe $(TargetDir)Fleck.dll $(TargetDir)Newtonsoft.Json.dll</PostBuildEvent>
+$(ILMergeConsolePath) $(TargetDir)Puppet.exe /out:$(TargetDir)..\ILMerge-$(ConfigurationName)\Puppet.exe $(TargetDir)Fleck.dll $(TargetDir)Newtonsoft.Json.dll $(TargetDir)Puppet.Library.dll</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

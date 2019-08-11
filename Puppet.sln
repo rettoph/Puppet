@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puppet", "Puppet\Puppet.csproj", "{170D0C47-23B2-470C-8778-F6533C075FFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puppet.Library", "Puppet.Library\Puppet.Library.csproj", "{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Puppet.Library", "Puppet.Library\Puppet.Library.csproj", "{BC0158AA-4178-4EBB-BA49-23A64B78547B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{170D0C47-23B2-470C-8778-F6533C075FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{170D0C47-23B2-470C-8778-F6533C075FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{170D0C47-23B2-470C-8778-F6533C075FFE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28892BBD-C2CE-4FF9-9451-AE02E37DDC48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC0158AA-4178-4EBB-BA49-23A64B78547B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC0158AA-4178-4EBB-BA49-23A64B78547B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC0158AA-4178-4EBB-BA49-23A64B78547B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC0158AA-4178-4EBB-BA49-23A64B78547B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
