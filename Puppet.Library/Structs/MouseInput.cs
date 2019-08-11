@@ -48,7 +48,7 @@ namespace Puppet.Library.Structs
         /// which X buttons were pressed or released. This value may be any combination of the 
         /// following flags.
         /// </summary>
-        public Int32 mouseData { get; set; }
+        public MouseData mouseData { get; set; }
 
         /// <summary>
         /// A set of bit flags that specify various aspects of mouse motion and button clicks. 

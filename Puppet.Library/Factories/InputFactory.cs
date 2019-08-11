@@ -28,7 +28,7 @@ namespace Puppet.Library.Factories
         /// <param name="time">The time stamp for the event, in milliseconds. If this parameter is 0, the system will provide its own time stamp.</param>
         /// <param name="dwExtraInfo">An additional value associated with the mouse event. An application calls GetMessageExtraInfo to obtain this extra information.</param>
         /// <returns></returns>
-        public static Input CreateMouseInput(Int32 dx, Int32 dy, MouseInputDwFlag dwFlags, Int32 mouseData = 0, UInt32 time = 0, IntPtr dwExtraInfo = default(IntPtr))
+        public static Input CreateMouseInput(Int32 dx, Int32 dy, MouseInputDwFlag dwFlags, MouseData mouseData = 0, UInt32 time = 0, IntPtr dwExtraInfo = default(IntPtr))
         {
             if (dwExtraInfo == default(IntPtr))
                 dwExtraInfo = User32.GetMessageExtraInfo();
@@ -71,6 +71,10 @@ namespace Puppet.Library.Factories
                     ki = new KeyBoardInput()
                     {
                         wvk = wvk,
+                        dwFlags = dwFlags,
+                        wScan = wScan,
+                        time = time,
+                        dwExtraInfo = dwExtraInfo
                     }
                 }
             };
