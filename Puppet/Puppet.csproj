@@ -98,7 +98,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>npx webpack</PreBuildEvent>
+    <PreBuildEvent>npx webpack --env=$(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)..\ILMerge-$(ConfigurationName)
