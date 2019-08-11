@@ -120,6 +120,7 @@
                     this.slices[i].drawForeground();
 
                 if (this.data != null) {
+                    this.ctx.fillStyle = '#747d8c';
                     this.ctx.globalAlpha = this.alpha;
                     this.ctx.beginPath();
                     this.ctx.arc(this.data.px.x, this.data.px.y, 50, 0, Math.PI * 2);

@@ -41,7 +41,8 @@
                 clickSteps: 50,
                 moveMultiplier: 5,
                 scrollMultiplier: 15,
-                dirty: false
+                dirty: false,
+                scrollVibrating: false
             }
         },
         mounted() {
@@ -161,15 +162,20 @@
                 if (this.moved && this.dirty) {
                     // Send the moved data...
                     if (!this.pressed && !this.left) {
-                        if (Math.abs(this.data.px.dy) > 2) {
+                        if (Math.abs(this.data.px.dy * this.scrollMultiplier) > 10) {
                             // Send scroll data...
                             InputFactory.SendMouseInput(
                                 0,
                                 0,
                                 MouseInputDwFlag.MOUSEEVENTF_WHEEL,
-                                (-0.05 * Math.pow(this.data.px.dy, 3)) * this.scrollMultiplier);
+                                -this.data.px.dy * this.scrollMultiplier);
 
-                            window.navigator.vibrate(5);
+                            if (!this.scrollVibrating) {
+                                window.navigator.vibrate(10);
+                                this.scrollVibrating = true;
+                                setTimeout(this.finishVibration, 100);
+                            }
+                            
                         }
                     }
                     else {
@@ -283,6 +289,9 @@
                         this.clicks.splice(i, 1);
                     }
                 }
+            },
+            finishVibration() {
+                this.scrollVibrating = false;
             }
         }
     }
