@@ -21,7 +21,8 @@
         data() {
             return {
                 touch: null,
-                down: false
+                down: false,
+                firstMove: false
             }
         },
         mounted() {
@@ -32,6 +33,7 @@
                 if (!this.down) {
                     // Set the initial touch value...
                     this.touch = e.changedTouches.item(0);
+                    this.firstMove = true;
 
                     console.log('Touch Component - Start', this.touch.identifier);
 
@@ -40,9 +42,16 @@
             },
             handleTouchMove(e) {
                 if (this.getNewTouch(e.changedTouches) != null) {
-                    console.log('Touch Component - Move', this.touch.identifier);
+                    if (this.firstMove) {
+                        this.touch = this.getNewTouch(e.changedTouches);
 
-                    this.updateTouch(e, true);
+                        this.firstMove = false; 
+                    }
+                    else {
+                        console.log('Touch Component - Move', this.touch.identifier);
+
+                        this.updateTouch(e, true);
+                    }
                 }
             },
             handleTouchEnd(e) {

@@ -1,0 +1,36 @@
+﻿<template>
+    <div 
+         class="button"
+         @mousedown="handleMouseDown"
+         @mouseup="handleMouseUp"
+    >
+        <slot></slot>
+    </div>
+</template>
+
+<script>
+    const InputFactory = require('../utilities/InputFactory');
+    const DwFlag = require('../utilities/KeyBoardInputDwFlag.js');
+
+    export default {
+        props: {
+            code: {
+                required: true,
+                type: Number
+            }
+        },
+        mounted() {
+            console.log("Button Component mounted.")
+        },
+        methods: {
+            handleMouseDown(e) {
+                console.log("Button Component - Mouse Down");
+                InputFactory.SendKeyboardInput(this.code, DwFlag.KEYEVENTF_UNICODE);
+            },
+            handleMouseUp(e) {
+                console.log("Button Compoent - Mouse Up");
+                InputFactory.SendKeyboardInput(this.code, DwFlag.KEYEVENTF_UNICODE + DwFlag.KEYEVENTF_KEYUP);
+            }
+        }
+    }
+</script>

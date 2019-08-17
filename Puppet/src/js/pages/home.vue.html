@@ -1,5 +1,6 @@
 ﻿<template>
     <div>
+        <vk-button :code="esc">ESC</vk-button>
         <key-joystick :keys="keys"></key-joystick>
         <trackpad></trackpad>
     </div>
@@ -12,11 +13,12 @@
         data() {
             return {
                 keys: [
-                    KeyCode.VK_RIGHT,
-                    KeyCode.VK_DOWN,
-                    KeyCode.VK_LEFT,
-                    KeyCode.VK_UP
-                ]
+                    KeyCode.VK_D,
+                    KeyCode.VK_S,
+                    KeyCode.VK_A,
+                    KeyCode.VK_W
+                ],
+                esc: KeyCode.VK_ESCAPE
             }
         },
         mounted() {
