@@ -9,16 +9,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "css-loader": "^3.0.0",
+    "css-loader": "^6.7.3",
     "lerp": "^1.0.3",
     "screenfull": "^4.2.0",
     "vue": "^2.6.10",
-    "vue-loader": "^15.7.0",
+    "vue-loader": "^17.0.1",
     "vue-router": "^3.0.7",
     "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.33.0"
+    "webpack": "^5.75.0"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.4"
+    "webpack-cli": "^5.0.1"
   }
 }
